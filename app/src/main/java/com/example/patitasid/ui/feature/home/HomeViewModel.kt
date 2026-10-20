@@ -2,9 +2,10 @@ package com.example.patitasid.ui.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.patitasid.common.DomainError
 import com.example.patitasid.common.SealedResult
 import com.example.patitasid.domain.usecase.CheckServerHealthUseCase
+import com.example.patitasid.ui.common.UserMessages
+import com.example.patitasid.ui.common.toUserMessage
 import com.example.patitasid.util.toDisplayDate
 import java.time.LocalDate
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,15 +44,9 @@ class HomeViewModel(private val checkServerHealth: CheckServerHealthUseCase) : V
         }
     }
 
-    private fun DomainError.toUserMessage(): String = when (this) {
-        DomainError.Network -> NETWORK_MESSAGE
-        is DomainError.Server -> SERVER_MESSAGE
-        DomainError.Unexpected -> SERVER_MESSAGE
-    }
-
     companion object {
         const val ONLINE_MESSAGE = "Conectado al servidor de PetMate."
-        const val NETWORK_MESSAGE = "No hay conexión a internet. Revisa tu red e inténtalo de nuevo."
-        const val SERVER_MESSAGE = "El servidor no está disponible en este momento. Inténtalo más tarde."
+        const val NETWORK_MESSAGE = UserMessages.NETWORK
+        const val SERVER_MESSAGE = UserMessages.SERVER
     }
 }
