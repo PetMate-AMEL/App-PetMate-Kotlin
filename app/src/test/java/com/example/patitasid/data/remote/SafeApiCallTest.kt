@@ -16,6 +16,11 @@ class SafeApiCallTest {
     }
 
     @Test
+    fun `no content without body is still a success`() = runTest {
+        assertEquals(SealedResult.Success(Unit), safeApiCallNoBody { Response.success<Unit>(204, null) })
+    }
+
+    @Test
     fun `no internet returns Network error instead of crashing`() = runTest {
         val result = safeApiCall<Unit> { throw IOException("offline") }
         assertEquals(SealedResult.Failure(DomainError.Network), result)
