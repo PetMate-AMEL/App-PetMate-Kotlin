@@ -21,4 +21,13 @@ class CredentialRulesTest {
         assertFalse(CredentialRules.isValidPassword("solamenteletras"))
         assertFalse(CredentialRules.isValidPassword("12345678"))
     }
+
+    @Test
+    fun `name cannot be empty or a single letter`() {
+        assertTrue(CredentialRules.isValidName("Ana"))
+        assertTrue(CredentialRules.isValidName("  Ana  "))
+        assertFalse(CredentialRules.isValidName(""))
+        assertFalse(CredentialRules.isValidName("   "))
+        assertFalse(CredentialRules.isValidName("A"))
+    }
 }
