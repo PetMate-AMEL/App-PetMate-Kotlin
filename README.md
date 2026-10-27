@@ -86,3 +86,28 @@ Criterios de aceptación:
 | 3 | Sin internet muestra un aviso claro y no se cierra | ✅ |
 
 Pendiente: URL real del servidor de pruebas.
+
+#### Eduardo — HU-011 · «Olvidé mi contraseña» y restablecimiento
+
+> Como usuario que olvidó su contraseña, quiero pedir un enlace a mi correo y crear una contraseña nueva para volver a entrar sin perder mis datos.
+
+Lo que se hizo:
+
+- **Pantalla «Olvidé mi contraseña»**: pide el correo y siempre responde «Si el correo existe, te enviamos un enlace», sin revelar qué correos están registrados.
+- **Deep link** `petmate://restablecer-contrasena/{token}` que abre la pantalla «Nueva contraseña».
+- **Pantalla «Nueva contraseña»**: valida el enlace al abrirse, pide la contraseña dos veces (8+ caracteres con letras y números) y avisa si el enlace expiró, con botón «Pedir otro enlace».
+- **Capa de datos local/remota**: `PasswordRepository` con `PasswordRemoteRepository` (API) y `PasswordLocalRepository` (demo; el token `expirado` simula un enlace vencido).
+- **Componentes nuevos**: `PetPasswordField` (mostrar/ocultar), `PetTopBar` y `PetStatusMessage`.
+- **Corrección**: `safeApiCallNoBody` trata cualquier 2xx como éxito; antes un 204 de `/api/salud` se mostraba como servidor caído.
+- **Pruebas unitarias**: `ForgotPasswordViewModelTest`, `ResetPasswordViewModelTest`, `PasswordRemoteRepositoryTest` y `CredentialRulesTest`.
+- **Documentación**: `specs/HU-011-forgot-password/`.
+
+Criterios de aceptación:
+
+| # | Criterio | Estado |
+|---|---|---|
+| 1 | Al tocar «Enviar enlace» ve «Si el correo existe, te enviamos un enlace» | ✅ |
+| 2 | Al abrir el enlace y escribir una contraseña válida dos veces, se guarda y vuelve a iniciar sesión | ✅ guarda; «Iniciar sesión» regresa a Bienvenida hasta que exista Login |
+| 3 | Si el enlace expiró, ve que ya no es válido y puede pedir otro | ✅ |
+
+Pendiente: confirmar el contrato del API con Miguel (ver `spec.md`) y prueba manual en emulador.
