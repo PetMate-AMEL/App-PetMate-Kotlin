@@ -7,6 +7,9 @@ sealed interface DomainError {
 
     // A one-time link (e.g. password reset) that expired or was already used.
     data object ExpiredLink : DomainError
+
+    // Sign-up with an email that already has an account.
+    data object EmailAlreadyUsed : DomainError
 }
 
 sealed interface SealedResult<out T> {
