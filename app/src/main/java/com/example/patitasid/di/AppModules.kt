@@ -2,11 +2,20 @@ package com.example.patitasid.di
 
 import com.example.patitasid.BuildConfig
 import com.example.patitasid.data.remote.HealthApiService
+import com.example.patitasid.data.remote.PasswordApiService
 import com.example.patitasid.data.repository.HealthLocalRepository
 import com.example.patitasid.data.repository.HealthRemoteRepository
+import com.example.patitasid.data.repository.PasswordLocalRepository
+import com.example.patitasid.data.repository.PasswordRemoteRepository
 import com.example.patitasid.domain.repository.HealthRepository
+import com.example.patitasid.domain.repository.PasswordRepository
 import com.example.patitasid.domain.usecase.CheckServerHealthUseCase
+import com.example.patitasid.domain.usecase.RequestPasswordResetUseCase
+import com.example.patitasid.domain.usecase.ResetPasswordUseCase
+import com.example.patitasid.domain.usecase.ValidateResetLinkUseCase
 import com.example.patitasid.ui.feature.home.HomeViewModel
+import com.example.patitasid.ui.feature.password.ForgotPasswordViewModel
+import com.example.patitasid.ui.feature.password.ResetPasswordViewModel
 import java.util.concurrent.TimeUnit
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -36,11 +45,20 @@ val coreModule = module {
 val dataModule = module {
     single<HealthApiService> { get<Retrofit>().create(HealthApiService::class.java) }
     single<HealthRepository> { if (BuildConfig.USE_LOCAL_DATA) HealthLocalRepository() else HealthRemoteRepository(api = get()) }
+    single<PasswordApiService> { get<Retrofit>().create(PasswordApiService::class.java) }
+    single<PasswordRepository> { if (BuildConfig.USE_LOCAL_DATA) PasswordLocalRepository() else PasswordRemoteRepository(api = get()) }
 }
 
 val featureModule = module {
     factory<CheckServerHealthUseCase> { CheckServerHealthUseCase(healthRepository = get()) }
     viewModel<HomeViewModel> { HomeViewModel(checkServerHealth = get()) }
+    factory<RequestPasswordResetUseCase> { RequestPasswordResetUseCase(passwordRepository = get()) }
+    factory<ValidateResetLinkUseCase> { ValidateResetLinkUseCase(passwordRepository = get()) }
+    factory<ResetPasswordUseCase> { ResetPasswordUseCase(passwordRepository = get()) }
+    viewModel<ForgotPasswordViewModel> { ForgotPasswordViewModel(requestPasswordReset = get()) }
+    viewModel<ResetPasswordViewModel> { params ->
+        ResetPasswordViewModel(token = params.get(), validateResetLink = get(), resetPassword = get())
+    }
 }
 
 val appModules = listOf(coreModule, dataModule, featureModule)

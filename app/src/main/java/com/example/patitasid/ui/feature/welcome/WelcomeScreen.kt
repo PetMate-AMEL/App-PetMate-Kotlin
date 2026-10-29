@@ -6,16 +6,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Pets
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +31,7 @@ import com.example.patitasid.ui.theme.PetMateTheme
 
 // Figma frame 01 · Bienvenida, trimmed to current scope (no sign-up/login yet).
 @Composable
-fun WelcomeScreen(onStart: () -> Unit) {
+fun WelcomeScreen(onStart: () -> Unit, onForgotPassword: () -> Unit) {
     val colors = MaterialTheme.colorScheme
     Column(
         modifier = Modifier
@@ -50,6 +54,12 @@ fun WelcomeScreen(onStart: () -> Unit) {
         Spacer(Modifier.weight(1f))
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             PetPrimaryButton(text = "Comenzar", onClick = onStart)
+            // Temporary entry point until the login screen exists (HU-011).
+            TextButton(
+                onClick = onForgotPassword,
+                colors = ButtonDefaults.textButtonColors(contentColor = colors.onPrimary),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+            ) { Text("¿Olvidaste tu contraseña?", style = MaterialTheme.typography.labelLarge) }
         }
     }
 }
@@ -57,5 +67,5 @@ fun WelcomeScreen(onStart: () -> Unit) {
 @Preview
 @Composable
 private fun WelcomeScreenPreview() {
-    PetMateTheme { WelcomeScreen(onStart = {}) }
+    PetMateTheme { WelcomeScreen(onStart = {}, onForgotPassword = {}) }
 }
