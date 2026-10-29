@@ -26,12 +26,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.patitasid.ui.components.PetOutlinedButton
 import com.example.patitasid.ui.components.PetPrimaryButton
 import com.example.patitasid.ui.theme.PetMateTheme
 
-// Figma frame 01 · Bienvenida, trimmed to current scope (no sign-up/login yet).
+// HU-008: the welcome screen only appears when there is no saved session (RF-01).
 @Composable
-fun WelcomeScreen(onStart: () -> Unit, onForgotPassword: () -> Unit) {
+fun WelcomeScreen(
+    onLogin: () -> Unit,
+    onSignUp: () -> Unit,
+    onTryDemo: () -> Unit,
+    onForgotPassword: () -> Unit
+) {
     val colors = MaterialTheme.colorScheme
     Column(
         modifier = Modifier
@@ -50,14 +56,25 @@ fun WelcomeScreen(onStart: () -> Unit, onForgotPassword: () -> Unit) {
         }
         Spacer(Modifier.height(24.dp))
         Text("PetMate", style = MaterialTheme.typography.headlineLarge, color = colors.onPrimary)
-        Text("El carnet digital de tu mascota", style = MaterialTheme.typography.bodyLarge, color = colors.onPrimary.copy(alpha = 0.85f))
+        Text(
+            "El carnet digital de tu mascota",
+            style = MaterialTheme.typography.bodyLarge,
+            color = colors.onPrimary.copy(alpha = 0.85f)
+        )
         Spacer(Modifier.weight(1f))
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            PetPrimaryButton(text = "Comenzar", onClick = onStart)
-            // Temporary entry point until the login screen exists (HU-011).
+            PetPrimaryButton(text = "Iniciar sesión", onClick = onLogin)
+            PetOutlinedButton(text = "Crear cuenta", onClick = onSignUp, contentColor = colors.onPrimary)
+            // Lets a visitor look around before deciding to register (HU-013).
+            TextButton(
+                onClick = onTryDemo,
+                colors = ButtonDefaults.textButtonColors(contentColor = colors.onPrimary),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+            ) { Text("Probar demo", style = MaterialTheme.typography.labelLarge) }
+            // Temporary entry point until the login screen exists (HU-010).
             TextButton(
                 onClick = onForgotPassword,
-                colors = ButtonDefaults.textButtonColors(contentColor = colors.onPrimary),
+                colors = ButtonDefaults.textButtonColors(contentColor = colors.onPrimary.copy(alpha = 0.85f)),
                 modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
             ) { Text("¿Olvidaste tu contraseña?", style = MaterialTheme.typography.labelLarge) }
         }
@@ -67,5 +84,7 @@ fun WelcomeScreen(onStart: () -> Unit, onForgotPassword: () -> Unit) {
 @Preview
 @Composable
 private fun WelcomeScreenPreview() {
-    PetMateTheme { WelcomeScreen(onStart = {}, onForgotPassword = {}) }
+    PetMateTheme {
+        WelcomeScreen(onLogin = {}, onSignUp = {}, onTryDemo = {}, onForgotPassword = {})
+    }
 }
