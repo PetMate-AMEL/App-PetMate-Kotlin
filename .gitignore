@@ -17,3 +17,7 @@ local.properties
 .idea/
 .kotlin
 hs_err_pid*.log
+# Firma de release (nunca subir)
+keystore.properties
+*.jks
+*.keystore

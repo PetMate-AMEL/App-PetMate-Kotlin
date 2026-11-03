@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -8,12 +10,25 @@ plugins {
 val apiBaseUrl = providers.gradleProperty("petmateApiUrl").getOrElse("https://10.0.2.2:7229/")
 val dataSource = providers.gradleProperty("petmateDataSource").getOrElse("remote")
 
+// Release (Play Store): URL pública del API. Si no se define, el release usa datos demo (local)
+// para que nunca salga una versión apuntando al emulador (10.0.2.2).
+// ./gradlew bundleRelease -PpetmateReleaseApiUrl=https://api.tudominio.com/
+val releaseApiUrl = providers.gradleProperty("petmateReleaseApiUrl").getOrElse("")
+
+// Firma de release: keystore.properties en la raíz del proyecto (NO se sube a Git).
+// Ver keystore.properties.example
+val keystoreProps = Properties().apply {
+    val f = rootProject.file("keystore.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+val hasReleaseKeystore = keystoreProps.getProperty("storeFile") != null
+
 android {
     namespace = "com.example.patitasid"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.example.patitasid"
+        applicationId = "com.petmateamel.app"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
@@ -24,8 +39,28 @@ android {
         buildConfigField("boolean", "USE_LOCAL_DATA", (dataSource == "local").toString())
     }
 
+    signingConfigs {
+        create("release") {
+            if (hasReleaseKeystore) {
+                storeFile = rootProject.file(keystoreProps.getProperty("storeFile"))
+                storePassword = keystoreProps.getProperty("storePassword")
+                keyAlias = keystoreProps.getProperty("keyAlias")
+                keyPassword = keystoreProps.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (hasReleaseKeystore) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+            if (releaseApiUrl.isNotBlank()) {
+                buildConfigField("String", "API_BASE_URL", "\"$releaseApiUrl\"")
+                buildConfigField("boolean", "USE_LOCAL_DATA", "false")
+            } else {
+                buildConfigField("boolean", "USE_LOCAL_DATA", "true")
+            }
             optimization {
                 enable = false
             }

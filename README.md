@@ -50,8 +50,11 @@ Opciones de compilación:
 |---|---|---|---|
 | `petmateDataSource` | `remote` / `local` | `remote` | `local` usa datos demo sin servidor |
 | `petmateApiUrl` | URL del API | `https://10.0.2.2:7229/` | URL del servidor de pruebas |
+| `petmateReleaseApiUrl` | URL pública | _(vacío → datos demo)_ | URL del API para el release de Play Store |
 
 Ejemplo: `./gradlew assembleDebug -PpetmateDataSource=local`
+
+Para publicar en Google Play (firma, `.aab` y ficha de la tienda) ver [`play-store/README.md`](play-store/README.md).
 
 ## Ramas
 
