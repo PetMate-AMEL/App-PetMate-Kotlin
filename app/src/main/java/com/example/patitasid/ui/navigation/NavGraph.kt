@@ -11,6 +11,7 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.patitasid.domain.model.StartDestination
+import com.example.patitasid.ui.feature.account.DeleteAccountScreen
 import com.example.patitasid.ui.feature.home.HomeScreen
 import com.example.patitasid.ui.feature.password.ForgotPasswordScreen
 import com.example.patitasid.ui.feature.password.ResetPasswordScreen
@@ -55,13 +56,25 @@ fun NavGraph() {
             DemoScreen(onBack = { controller.popBackStack() })
         }
         composable<PetsRoute> {
-            PetsScreen(onBack = { controller.popBackStack() })
+            PetsScreen(onBack = { controller.popBackStack() }, onDeleteAccount = { controller.navigate(DeleteAccountRoute) })
         }
         composable<BusinessPanelRoute> {
-            BusinessPanelScreen(onBack = { controller.popBackStack() })
+            BusinessPanelScreen(
+                onBack = { controller.popBackStack() },
+                onDeleteAccount = { controller.navigate(DeleteAccountRoute) }
+            )
         }
         composable<HomeRoute> {
             HomeScreen(onBack = { controller.popBackStack() })
+        }
+        composable<DeleteAccountRoute> {
+            DeleteAccountScreen(
+                onBack = { controller.popBackStack() },
+                // With the account gone there is nothing to go back to: start over from the welcome screen.
+                onAccountDeleted = {
+                    controller.navigate(WelcomeRoute) { popUpTo(controller.graph.id) { inclusive = true } }
+                }
+            )
         }
         composable<ForgotPasswordRoute> {
             ForgotPasswordScreen(onBack = { controller.popBackStack() })

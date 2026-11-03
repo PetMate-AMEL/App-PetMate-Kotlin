@@ -22,6 +22,13 @@ class AccountRemoteRepositoryTest {
             } else {
                 Response.error(code, "".toResponseBody())
             }
+
+        val authorizations = mutableListOf<String>()
+
+        override suspend fun deleteAccount(authorization: String): Response<Unit> {
+            authorizations += authorization
+            return if (code in 200..299) Response.success(code, Unit) else Response.error(code, "".toResponseBody())
+        }
     }
 
     private fun repositoryOf(code: Int, body: SessionResponse? = null) = AccountRemoteRepository(FakeApi(code, body))
@@ -48,6 +55,23 @@ class AccountRemoteRepositoryTest {
     @Test
     fun `server failure stays a server error`() = runTest {
         val result = repositoryOf(500).signUp("Ana", "ana@correo.com", "mascota123")
+
+        assertEquals(SealedResult.Failure(DomainError.Server(500)), result)
+    }
+
+    @Test
+    fun `deleting the account sends the bearer token`() = runTest {
+        val api = FakeApi(204)
+
+        val result = AccountRemoteRepository(api).deleteAccount("acceso")
+
+        assertEquals(SealedResult.Success(Unit), result)
+        assertEquals(listOf("Bearer acceso"), api.authorizations)
+    }
+
+    @Test
+    fun `failed deletion stays a server error`() = runTest {
+        val result = repositoryOf(500).deleteAccount("acceso")
 
         assertEquals(SealedResult.Failure(DomainError.Server(500)), result)
     }

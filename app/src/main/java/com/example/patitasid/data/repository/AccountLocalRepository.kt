@@ -16,6 +16,8 @@ class AccountLocalRepository : AccountRepository {
             )
         }
 
+    override suspend fun deleteAccount(accessToken: String): SealedResult<Unit> = SealedResult.Success(Unit)
+
     companion object {
         const val TAKEN_EMAIL = "registrado@correo.com"
     }

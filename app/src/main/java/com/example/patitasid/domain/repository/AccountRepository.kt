@@ -6,4 +6,7 @@ import com.example.patitasid.domain.model.Session
 interface AccountRepository {
     // Failure(DomainError.EmailAlreadyUsed) when the email already has an account.
     suspend fun signUp(name: String, email: String, password: String): SealedResult<Session>
+
+    // Deletes the account and all its data on the server (Google Play account deletion policy).
+    suspend fun deleteAccount(accessToken: String): SealedResult<Unit>
 }

@@ -18,11 +18,13 @@ import com.example.patitasid.domain.repository.HealthRepository
 import com.example.patitasid.domain.repository.PasswordRepository
 import com.example.patitasid.domain.repository.SessionRepository
 import com.example.patitasid.domain.usecase.CheckServerHealthUseCase
+import com.example.patitasid.domain.usecase.DeleteAccountUseCase
 import com.example.patitasid.domain.usecase.GetStartDestinationUseCase
 import com.example.patitasid.domain.usecase.RequestPasswordResetUseCase
 import com.example.patitasid.domain.usecase.ResetPasswordUseCase
 import com.example.patitasid.domain.usecase.SignUpUseCase
 import com.example.patitasid.domain.usecase.ValidateResetLinkUseCase
+import com.example.patitasid.ui.feature.account.DeleteAccountViewModel
 import com.example.patitasid.ui.feature.home.HomeViewModel
 import com.example.patitasid.ui.feature.password.ForgotPasswordViewModel
 import com.example.patitasid.ui.feature.password.ResetPasswordViewModel
@@ -81,6 +83,8 @@ val featureModule = module {
     viewModel<StartupViewModel> { StartupViewModel(getStartDestination = get()) }
     factory<SignUpUseCase> { SignUpUseCase(accountRepository = get(), sessionRepository = get()) }
     viewModel<SignUpViewModel> { SignUpViewModel(signUp = get()) }
+    factory<DeleteAccountUseCase> { DeleteAccountUseCase(accountRepository = get(), sessionRepository = get()) }
+    viewModel<DeleteAccountViewModel> { DeleteAccountViewModel(deleteAccount = get()) }
 }
 
 val appModules = listOf(coreModule, dataModule, featureModule)

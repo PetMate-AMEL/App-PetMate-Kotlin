@@ -32,6 +32,9 @@ object PetsRoute
 object BusinessPanelRoute
 
 @Serializable
+object DeleteAccountRoute
+
+@Serializable
 object ForgotPasswordRoute
 
 @Serializable

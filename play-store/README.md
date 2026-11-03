@@ -41,6 +41,7 @@ En cada nueva versión, sube `versionCode` (+1) y `versionName` en `app/build.gr
 | `icono-512.png` | Ícono de la app (512×512) |
 | `grafico-destacado-1024x500.png` | Gráfico destacado |
 | `politica-de-privacidad.md` | Publícala en una URL pública y pega el enlace en Play Console |
+| `eliminar-cuenta.md` | Publícala en una URL pública: Play la pide en «Seguridad de los datos» |
 
 Faltan las capturas de pantalla: mínimo 2, tomadas del teléfono o del emulador.
 

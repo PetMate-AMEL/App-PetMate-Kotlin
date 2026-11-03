@@ -5,6 +5,7 @@ import com.example.patitasid.common.SealedResult
 import com.example.patitasid.data.remote.AccountApiService
 import com.example.patitasid.data.remote.SignUpRequest
 import com.example.patitasid.data.remote.safeApiCall
+import com.example.patitasid.data.remote.safeApiCallNoBody
 import com.example.patitasid.domain.model.Session
 import com.example.patitasid.domain.repository.AccountRepository
 import java.net.HttpURLConnection
@@ -33,4 +34,7 @@ class AccountRemoteRepository(private val api: AccountApiService) : AccountRepos
             }
         }
     }
+
+    override suspend fun deleteAccount(accessToken: String): SealedResult<Unit> =
+        safeApiCallNoBody { api.deleteAccount(authorization = "Bearer $accessToken") }
 }

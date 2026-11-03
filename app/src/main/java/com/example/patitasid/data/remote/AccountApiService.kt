@@ -3,12 +3,18 @@ package com.example.patitasid.data.remote
 import kotlinx.serialization.Serializable
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 // Contract pending confirmation with the API team (see specs/HU-009-crear-cuenta/spec.md).
 interface AccountApiService {
     @POST("api/auth/registro")
     suspend fun signUp(@Body body: SignUpRequest): Response<SessionResponse>
+
+    // Contract pending confirmation with the API team (see specs/PLAY-eliminar-cuenta/spec.md).
+    @DELETE("api/cuenta")
+    suspend fun deleteAccount(@Header("Authorization") authorization: String): Response<Unit>
 }
 
 @Serializable
